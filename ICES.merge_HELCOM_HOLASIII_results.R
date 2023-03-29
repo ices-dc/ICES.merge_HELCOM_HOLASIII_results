@@ -1,168 +1,221 @@
-require(data.table)
- 
+library(data.table)
+#install.packages("readxl")
+library(readxl)
+#install.packages("writexl")
+library(writexl)
 
 ####################################
-###Merging transposed biota files###
+###Merging biota files###
 
-#depth profile
-#Baltic
-bio_dp1 <- fread("Input/Baltic/transposed_data_from_harmonized_biota_profiles_Baltic_200803.txt")
-bio_dp1$emd_region <- "Baltic"     
-#Black Sea
-bio_dp2 <- fread("Input/Black/transposed_data_from_BLS_Harmonized_Contaminants_Biota.txt")
-bio_dp2$emd_region <- "Black"     
-#Mediterranean Sea
-bio_dp3 <- fread("Input/Mediterranean/transposed_data_from_Contaminant_MED_profiles_biota.txt")
-bio_dp3$emd_region <- "Mediterranean"     
+#Bio CD
+bio_CD4 <- read_excel("HELCOM_raw_input/Final results Cd/Cd wbiota final results.xlsx", sheet = "biota Cd scale 4")
+bio_CD4$au_level <- 4
+bio_CD3 <- read_excel("HELCOM_raw_input/Final results Cd/Cd wbiota final results.xlsx", sheet = "scale 3")
+bio_CD3$au_level <- 3
 
-#Merge depth profile tables
-bio_dpAll <- rbindlist(list(bio_dp1,bio_dp2,bio_dp3), use.names = TRUE, fill=TRUE)
-#add id
-id <- seq_len(nrow(bio_dpAll))
-bio_dpAll <- cbind(id, bio_dpAll)
-#Add value_txt - not needed for now
-#bio_dpAll$Value_txt <- bio_dpAll$Value
+#Bio HCBDD
+bio_HCBDD4 <- read_excel("HELCOM_raw_input/Final results HBCD/HBCDD in biota.xlsx", sheet = "biota HBCD scale 4")
+bio_HCBDD4$au_level <- 4
+bio_HCBDD3 <- read_excel("HELCOM_raw_input/Final results HBCD/HBCDD in biota.xlsx", sheet = "scale 3")
+bio_HCBDD3$au_level <- 3
 
-#Write output table
-write.table(bio_dpAll, file = "Results/bio_dpAll.txt", quote=FALSE, sep = "\t",
-            row.names = FALSE, col.names = TRUE, na="")
+#Bio HG
+bio_HG4 <- read_excel("HELCOM_raw_input/Final results HG/Hg biota final results.xlsx", sheet = "biota Hg scale 4")
+bio_HG4$au_level <- 4
+bio_HG3 <- read_excel("HELCOM_raw_input/Final results HG/Hg biota final results.xlsx", sheet = "scale 3")
+bio_HG3$au_level <- 3
 
-#time series
-#Atlantic
-bio_ts1 <- fread("Input/Atlantic/transposed_data_from_harmonized_Biota_time_series.txt")
-bio_ts1$emd_region <- "Atlantic"     
-#Baltic
-bio_ts2 <- fread("Input/Baltic/transposed_data_from_harmonized_biota_timeseries_Baltic_200623.txt")
-bio_ts2$emd_region <- "Baltic"  
-#Mediterranean
-bio_ts3 <- fread("Input/Mediterranean/transposed_data_from_Contaminant_MED_timeseries_biota.txt")
-bio_ts3$emd_region <- "Mediterranean"  
-#North Sea
-bio_ts4 <- fread("Input/NorthSea/transposed_data_from_data_from_harmonized_Harmonized_2019-2020_biota_data.txt")
-bio_ts4$emd_region <- "NorthSea"
+#PAH
+#Bio FLU
+bio_FLU4 <- read_excel("HELCOM_raw_input/Final results PAH/PAHs biota final results_columnalign_hmj.xlsx", sheet = "FLU scale 4")
+bio_FLU4$au_level <- 4
+#rename Conf column name to fit the other excel tables
+colnames(bio_FLU4)[colnames(bio_FLU4) == "Conf"] = "...32"
+bio_FLU3 <- read_excel("HELCOM_raw_input/Final results PAH/PAHs biota final results_columnalign_hmj.xlsx", sheet = "FLU scale 3")
+bio_FLU3$au_level <- 3
 
-#Merge time series tables
-bio_tsAll <- rbindlist(list(bio_ts1,bio_ts2,bio_ts3,bio_ts4), use.names = TRUE, fill=TRUE)
-#Add id
-id <- seq_len(nrow(bio_tsAll))
-bio_tsAll <- cbind(id, bio_tsAll)
-#Add value_txt - not needed for now
-#bio_tsAll$Value_txt <- bio_tsAll$Value
+#PAH
+#Bio BAP
+bio_BAP4 <- read_excel("HELCOM_raw_input/Final results PAH/PAHs biota final results_columnalign_hmj.xlsx", sheet = "BAP scale 4")
+bio_BAP4$au_level <- 4
+#rename Conf column name to fit the other excel tables
+colnames(bio_BAP4)[colnames(bio_BAP4) == "Conf"] = "...32"
+bio_BAP3 <- read_excel("HELCOM_raw_input/Final results PAH/PAHs biota final results_columnalign_hmj.xlsx", sheet = "BAP scale 3")
+bio_BAP3$au_level <- 3
 
+#PAH
+#Bio PYR1OH
+bio_PYR1OH4 <- read_excel("HELCOM_raw_input/Final results PAH/PAH metabolites biota final results.xlsx", sheet = "biota PAH metabolites - scale 4")
+bio_PYR1OH4$au_level <- 4
+bio_PYR1OH3 <- read_excel("HELCOM_raw_input/Final results PAH/PAH metabolites biota final results.xlsx", sheet = "Scale 3")
+bio_PYR1OH3$au_level <- 3
 
-#write output table
-write.table(bio_tsAll, file = "Results/bio_tsAll.txt", quote=FALSE, sep = "\t",
-            row.names = FALSE, col.names = TRUE, na="")
+#Bio PB
+bio_PB4 <- read_excel("HELCOM_raw_input/Final results Pb/Lead biota final results.xlsx", sheet = "biota Pb scale 4")
+bio_PB4$au_level <- 4
+bio_PB3 <- read_excel("HELCOM_raw_input/Final results Pb/Lead biota final results.xlsx", sheet = "scale 3")
+bio_PB3$au_level <- 3
 
+#Bio PBDE
+bio_PBDE4 <- read_excel("HELCOM_raw_input/Final results PBDE/PBDE biota final results.xlsx", sheet = "biota PBDEs scale 4")
+bio_PBDE4$au_level <- 4
+bio_PBDE3 <- read_excel("HELCOM_raw_input/Final results PBDE/PBDE biota final results.xlsx", sheet = "scale 3")
+bio_PBDE3$au_level <- 3
 
-#######################################
-###Merging transposed sediment files###
+#Dioxin
+#Bio TEQDFP
+bio_TEQDFP4 <- read_excel("HELCOM_raw_input/Final results PCB/Dioxins biota final resulsts.xlsx", sheet = "biota Dioxins scale 4")
+bio_TEQDFP4$au_level <- 4
+bio_TEQDFP3 <- read_excel("HELCOM_raw_input/Final results PCB/Dioxins biota final resulsts.xlsx", sheet = "scale 3")
+bio_TEQDFP3$au_level <- 3
 
-#depth profile
-#Arctic
-sed_dp1 <- fread("Input/Arctic/transposed_data_from_harmonized_sediment_depth_profiles_v3.txt")
-sed_dp1$emd_region <- "Arctic"  
-#Atlantic
-sed_dp2 <- fread("Input/Atlantic/transposed_data_from_harmonized_sediment_depth_profiles.txt")
-sed_dp2$emd_region <- "Atlantic"  
-#Baltic
-sed_dp3 <- fread("Input/Baltic/transposed_data_from_harmonized_sediment_profiles_Baltic_200806.txt")
-sed_dp3$emd_region <- "Baltic"  
-sed_dp3_upper10 <- fread("Input/Baltic/transposed_data_from_range001_harmonized_sediment_profiles_Baltic_200806.txt")
-sed_dp3_upper10$emd_region <- "Baltic"  
-#Black 
-sed_dp4 <- fread("Input/Black/transposed_data_from_BLS_Harmonized_Contaminants_Sediment_v2.txt")
-sed_dp4$emd_region <- "Black"  
-#Mediterranean
-sed_dp5 <- fread("Input/Mediterranean/transposed_data_from_Contaminant_MED_profiles_sediment.txt")
-sed_dp5$emd_region <- "Mediterranean"  
+#PCB
+#Bio SCB6
+bio_SCB64 <- read_excel("HELCOM_raw_input/Final results PCB/PCBs biota final resulsts.xlsx", sheet = "biota PCBs scale 4")
+bio_SCB64$au_level <- 4
+bio_SCB63 <- read_excel("HELCOM_raw_input/Final results PCB/PCBs biota final resulsts.xlsx", sheet = "scale 3")
+bio_SCB63$au_level <- 3
 
-#Merge depth profile tables
-sed_dpAll <- rbindlist(list(sed_dp1,sed_dp2,sed_dp3,sed_dp4,sed_dp5), use.names = TRUE, fill=TRUE)
-## Add id
-id <- seq_len(nrow(sed_dpAll))
-sed_dpAll <- cbind(id, sed_dpAll)
-#Add value_txt
-sed_dpAll$Value_txt <- sed_dpAll$Value
+#Bio PFOS
+bio_PFOS4 <- read_excel("HELCOM_raw_input/Final results PFOS/PFOS biota final results.xlsx", sheet = "biota PFOS scale 4")
+bio_PFOS4$au_level <- 4
+bio_PFOS3 <- read_excel("HELCOM_raw_input/Final results PFOS/PFOS biota final results.xlsx", sheet = "scale 3")
+bio_PFOS3$au_level <- 3
 
-#write output table
-write.table(sed_dpAll, file = "Results/sed_dpAll.txt", quote=FALSE, sep = "\t",
-            row.names = FALSE, col.names = TRUE, na="")
-
-
-#time series
-#Atlantic
-sed_ts1 <- fread("Input/Atlantic/transposed_data_from_harmonized_sediment_time_series.txt")
-sed_ts1$emd_region <- "Atlantic"  
-#Mediterranean
-sed_ts2 <- fread("Input/Mediterranean/transposed_data_from_Contaminant_MED_timeseries_sediment.txt")
-sed_ts2$emd_region <- "Mediterranean"  
-
-#Merge time series tables
-sed_tsAll <- rbindlist(list(sed_ts1,sed_ts2), use.names = TRUE, fill=TRUE)
-#Add id
-id <- seq_len(nrow(sed_tsAll))
-sed_tsAll <- cbind(id, sed_tsAll)
-#Add value_txt
-sed_tsAll$Value_txt <- sed_tsAll$Value
-
-
-#write output table
-write.table(sed_tsAll, file = "Results/sed_tsAll.txt", quote=FALSE, sep = "\t",
-            row.names = FALSE, col.names = TRUE, na="")
-
-##################################
-###Merge transposed water files###
-
-#depth profile
-#Arctic
-wat_dp1 <- fread("Input/Arctic/transposed_data_from_harmonized_ocean_depth_profiles.txt")
-wat_dp1$emd_region <- "Arctic"  
-#Atlantic
-wat_dp2 <- fread("Input/Atlantic/transposed_data_from_harmonized_ocean_depth_profiles_cleaned.txt")
-wat_dp2$emd_region <- "Atlantic"  
-#Baltic
-wat_dp3 <- fread("Input/Baltic/transposed_data_from_harmonized_water_profiles_Baltic_200709.txt")
-wat_dp3$emd_region <- "Baltic"  
-#Black
-wat_dp4 <- fread("Input/Black/transposed_data_from_BLS_Harmonized_Contaminants_Water.txt")
-wat_dp4$emd_region <- "Black"  
-#Mediterranean
-wat_dp5 <- fread("Input/Mediterranean/transposed_data_from_Contaminant_MED_profiles_water.txt")
-wat_dp5$emd_region <- "Mediterranean"  
+#TBT-Imposex
+#Bio VDS
+bio_VDS4 <- read_excel("HELCOM_raw_input/Final results TBT/biota imposex Final results.xlsx", sheet = "biota Imposex scale 4")
+bio_VDS4$au_level <- 4
+bio_VDS3 <- read_excel("HELCOM_raw_input/Final results TBT/biota imposex Final results.xlsx", sheet = "scale 3")
+bio_VDS3$au_level <- 3
 
 #Merge depth profile tables
-wat_dpAll <- rbindlist(list(wat_dp1,wat_dp2,wat_dp3,wat_dp4,wat_dp5), use.names = TRUE, fill=TRUE)
+bio_All <- rbindlist(list(bio_BAP3,bio_BAP4,bio_CD3,bio_CD4,bio_FLU3,bio_FLU4,bio_HCBDD3,bio_HCBDD4,
+                          bio_HG3,bio_HG4,bio_PB3,bio_PB4,bio_PBDE3, bio_PBDE4,bio_PFOS3,bio_PFOS4,
+                          bio_PYR1OH3,bio_PYR1OH4,bio_SCB63,bio_SCB64,bio_TEQDFP3,bio_TEQDFP4,bio_VDS3,bio_VDS4), use.names = TRUE, fill=TRUE)
+#Rename ...32 TO Conf
+colnames(bio_All)[colnames(bio_All) == "...32"] = "Conf"
+
 #Add id
-id <- seq_len(nrow(wat_dpAll))
-wat_dpAll <- cbind(id, wat_dpAll)
-#Add value_txt
-wat_dpAll$Value_txt <- wat_dpAll$Value
+#id <- seq_len(nrow(bio_All))
+#bio_All <- cbind(id, bio_All)
+
+#Save output xlxs
+write_xlsx(bio_All, "oUTPUT/Bioresults.xlsx",
+           col_names = TRUE)
+
+#####################################
+###Merging sediment files###
+
+#Sed CD
+sed_CD4 <- read_excel("HELCOM_raw_input/Final results Cd/Cd sediment final results.xlsx", sheet = "sediment Cd scale 4")
+sed_CD4$au_level <- 4
+sed_CD3 <- read_excel("HELCOM_raw_input/Final results Cd/Cd sediment final results.xlsx", sheet = "scale 3")
+sed_CD3$au_level <- 3
+
+#Sed CU
+sed_CU4 <- read_excel("HELCOM_raw_input/Final results Cu/Copper final results_columnalign_hmj.xlsx", sheet = "sediment Metals AU level 4")
+sed_CU4$au_level <- 4
+sed_CU3 <- read_excel("HELCOM_raw_input/Final results Cu/Copper final results_columnalign_hmj.xlsx", sheet = "AU level 3")
+sed_CU3$au_level <- 3
+
+#Sed HBCDD
+sed_HBCDD4 <- read_excel("HELCOM_raw_input/Final results HBCD/HBCDD in sediment.xlsx", sheet = "sediment HBCD scale 4")
+sed_HBCDD4$au_level <- 4
+sed_HBCDD3 <- read_excel("HELCOM_raw_input/Final results HBCD/HBCDD in sediment.xlsx", sheet = "scale 3")
+sed_HBCDD3$au_level <- 3
+
+#PAH
+#Sed ANT
+sed_ANT4 <- read_excel("HELCOM_raw_input/Final results PAH/PAHs sediments final results.xlsx", sheet = "ANT scale 4")
+sed_ANT4$au_level <- 4
+sed_ANT3 <- read_excel("HELCOM_raw_input/Final results PAH/PAHs sediments final results.xlsx", sheet = "ANT scale 3")
+sed_ANT3$au_level <- 3
+
+#PAH
+#Sed FLU
+sed_FLU4 <- read_excel("HELCOM_raw_input/Final results PAH/PAHs sediments final results.xlsx", sheet = "FLU scale 4")
+sed_FLU4$au_level <- 4
+sed_FLU3 <- read_excel("HELCOM_raw_input/Final results PAH/PAHs sediments final results.xlsx", sheet = "FLU scale 3")
+sed_FLU3$au_level <- 3
+
+#Sed PB
+sed_PB4 <- read_excel("HELCOM_raw_input/Final results Pb/Lead sediment final results.xlsx", sheet = "sediment Pb scale 4")
+sed_PB4$au_level <- 4
+sed_PB3 <- read_excel("HELCOM_raw_input/Final results Pb/Lead sediment final results.xlsx", sheet = "scale 3")
+sed_PB3$au_level <- 3
+
+#Sed PBDE
+sed_PBDE4 <- read_excel("HELCOM_raw_input/Final results PBDE/PBDE sediment final results.xlsx", sheet = "sediment PBDEs scale 4")
+sed_PBDE4$au_level <- 4
+sed_PBDE3 <- read_excel("HELCOM_raw_input/Final results PBDE/PBDE sediment final results.xlsx", sheet = "scale 3")
+sed_PBDE3$au_level <- 3
+
+#Sed TBSN
+sed_TBSN4 <- read_excel("HELCOM_raw_input/Final results TBT/sediment TBSN+ Final results.xlsx", sheet = "sediment TBSN+")
+sed_TBSN4$au_level <- 4
+sed_TBSN3 <- read_excel("HELCOM_raw_input/Final results TBT/sediment TBSN+ Final results.xlsx", sheet = "scale 3")
+sed_TBSN3$au_level <- 3
+
+
+#Merge depth profile tables
+sed_All <- rbindlist(list(sed_ANT3,sed_ANT4,sed_CD3,sed_CD4,sed_CU3,sed_CU4,sed_FLU3,sed_FLU4, sed_HBCDD3,sed_HBCDD4,
+                          sed_PB3,sed_PB4,sed_PBDE3,sed_PBDE4,sed_TBSN3,sed_TBSN4), use.names = TRUE, fill=TRUE)
+#Rename ...32 TO Conf
+colnames(sed_All)[colnames(sed_All) == "...32"] = "Conf"
+#Add id
+#id <- seq_len(nrow(bio_All))
+#bio_All <- cbind(id, bio_All)
+
+#Save output xlxs
+write_xlsx(sed_All, "oUTPUT/Sedresults.xlsx",
+           col_names = TRUE)
+
+#####################################
+###Merging water files###
+
+#Wat CD
+wat_CD4 <- read_excel("HELCOM_raw_input/Final results Cd/Cd water final results.xlsx", sheet = "water Cd scale 4")
+wat_CD4$au_level <- 4
+wat_CD3 <- read_excel("HELCOM_raw_input/Final results Cd/Cd water final results.xlsx", sheet = "scale 3")
+wat_CD3$au_level <- 3
+
+#Wat PB
+wat_PB4 <- read_excel("HELCOM_raw_input/Final results Pb/Lead water final results.xlsx", sheet = "water Pb scale 4")
+wat_PB4$au_level <- 4
+wat_PB3 <- read_excel("HELCOM_raw_input/Final results Pb/Lead water final results.xlsx", sheet = "scale 3")
+wat_PB3$au_level <- 3
+
+#Sed PFOS
+wat_PFOS4 <- read_excel("HELCOM_raw_input/Final results PFOS/PFOS water final results.xlsx", sheet = "water PFOS scale 4")
+wat_PFOS4$au_level <- 4
+wat_PFOS3 <- read_excel("HELCOM_raw_input/Final results PFOS/PFOS water final results.xlsx", sheet = "scale 3")
+wat_PFOS3$au_level <- 3
+
+#Sed TBSN
+wat_TBSN4 <- read_excel("HELCOM_raw_input/Final results TBT/water TBSN+ Final results.xlsx", sheet = "water TSBN+ Reulst scale 4 ")
+wat_TBSN4$au_level <- 4
+wat_TBSN3 <- read_excel("HELCOM_raw_input/Final results TBT/water TBSN+ Final results.xlsx", sheet = "scale 3")
+wat_TBSN3$au_level <- 3
+
+
+#Merge depth profile tables
+wat_All <- rbindlist(list(wat_CD3,wat_CD4,wat_PB3,wat_PB4,wat_PFOS3,wat_PFOS4,wat_TBSN3,wat_TBSN4), use.names = TRUE, fill=TRUE)
+#Rename ...32 TO Conf
+colnames(wat_All)[colnames(wat_All) == "...32"] = "Conf"
+#Add id
+#id <- seq_len(nrow(wat_All))
+#bio_All <- cbind(id, wat_All)
+
+#Save output xlxs
+write_xlsx(wat_All, "oUTPUT/Watresults.xlsx",
+           col_names = TRUE)
+
+
 
 #write output table
-write.table(wat_dpAll, file = "Results/wat_dpAll.txt", quote=FALSE, sep = "\t",
-            row.names = FALSE, col.names = TRUE, na="")
-
-
-#time series
-#Black
-wat_ts1 <- fread("Input/Black/transposed_data_from_BLS_harmonized_time_series_Contaminants_Water.txt")
-wat_ts1$emd_region <- "Black"  
-#Mediterranean
-wat_ts2 <- fread("Input/Mediterranean/transposed_data_from_Contaminant_MED_timeseries_water.txt")
-wat_ts2$emd_region <- "Mediterranean"  
-
-#Merge time series tables
-wat_tsAll <- rbindlist(list(wat_ts1,wat_ts2), use.names = TRUE, fill=TRUE)
-#Add id
-id <- seq_len(nrow(wat_tsAll))
-wat_tsAll <- cbind(id, wat_tsAll)
-#Add value_txt
-wat_tsAll$Value_txt <- wat_tsAll$Value
-
-#write output table
-write.table(wat_tsAll, file = "Results/wat_tsAll.txt", quote=FALSE, sep = "\t",
-            row.names = FALSE, col.names = TRUE, na="")
+# write.table(wat_tsAll, file = "Results/wat_tsAll.txt", quote=FALSE, sep = "\t",
+#             row.names = FALSE, col.names = TRUE, na="")
 
 ###Diverse
 #head(dtAll_ts, n=10)
