@@ -158,7 +158,7 @@ sed_TBSN3 <- read_excel("HELCOM_raw_input/Final results TBT/sediment TBSN+ Final
 sed_TBSN3$au_level <- 3
 
 
-#Merge depth profile tables
+#Merge sediment results
 sed_All <- rbindlist(list(sed_ANT3,sed_ANT4,sed_CD3,sed_CD4,sed_CU3,sed_CU4,sed_FLU3,sed_FLU4, sed_HBCDD3,sed_HBCDD4,
                           sed_PB3,sed_PB4,sed_PBDE3,sed_PBDE4,sed_TBSN3,sed_TBSN4), use.names = TRUE, fill=TRUE)
 #Rename ...32 TO Conf
@@ -199,7 +199,7 @@ wat_TBSN3 <- read_excel("HELCOM_raw_input/Final results TBT/water TBSN+ Final re
 wat_TBSN3$au_level <- 3
 
 
-#Merge depth profile tables
+#Merge water results
 wat_All <- rbindlist(list(wat_CD3,wat_CD4,wat_PB3,wat_PB4,wat_PFOS3,wat_PFOS4,wat_TBSN3,wat_TBSN4), use.names = TRUE, fill=TRUE)
 #Rename ...32 TO Conf
 colnames(wat_All)[colnames(wat_All) == "...32"] = "Conf"
@@ -211,7 +211,18 @@ colnames(wat_All)[colnames(wat_All) == "...32"] = "Conf"
 write_xlsx(wat_All, "oUTPUT/Watresults.xlsx",
            col_names = TRUE)
 
+#Merge biota, sediment and water into one table
+#Add Matrix column
+bio_All$matrix <- 'biota'
+sed_All$matrix <- 'sediment'
+wat_All$matrix <- 'water'
 
+#Merge tables 
+All <- rbindlist(list(bio_All, sed_All, wat_All), use.names = TRUE, fill=TRUE) 
+
+#Output Excel
+write_xlsx(All, "oUTPUT/results.xlsx",
+           col_names = TRUE)
 
 #write output table
 # write.table(wat_tsAll, file = "Results/wat_tsAll.txt", quote=FALSE, sep = "\t",
